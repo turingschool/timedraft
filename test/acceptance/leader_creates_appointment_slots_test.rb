@@ -13,11 +13,10 @@ class LeaderCreatesAppointmentSlotsTest < Minitest::Test
     assert_equal 0, user.appointments.count
     appointment = user.create_appointment(
       name: "Friday Lunch",
-      day: :friday,
-      starts: "12:00",
-      ends: "13:00",
+      starts: Time.now + 10000,
+      ends: Time.now + 20000,
       recurs: :none,
-      window_closes: "3 days"
+      window_closes: Time.now + 250
     )
     assert_equal 1, user.appointments.count
     assert_equal "Friday Lunch", user.appointments.first.name

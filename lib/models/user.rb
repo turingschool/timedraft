@@ -14,6 +14,8 @@ class User
   end
 
   def create_appointment(params)
-    @appointments << Appointment.new(params)
+    appointment = Appointment.new(params)
+    @appointments << appointment
+    return appointment
   end
 end
