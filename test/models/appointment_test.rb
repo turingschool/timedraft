@@ -44,4 +44,17 @@ class AppointmentTest < Minitest::Test
     appointment.with = target
     assert_equal target, appointment.with
   end
+
+  def test_it_tracks_requests
+    assert_empty appointment.requests
+    user = StubUser.new
+    appointment.add_request_by(user)
+    assert_count 1, appointment.requests
+  end
+
+  def test_is_booked_when_associated_with_a_user_and_closed
+    appointment.with = StubUser.new
+    appointment.close
+    assert appointment.booked?
+  end
 end

@@ -1,5 +1,7 @@
+require './lib/models/request'
+
 class Appointment
-  attr_reader :name, :day, :starts, :ends, :open
+  attr_reader :name, :day, :starts, :ends, :open, :requests
   attr_accessor :with
 
   def initialize(params)
@@ -8,6 +10,7 @@ class Appointment
     @starts = params[:starts]
     @ends = params[:ends]
     @open = true
+    @requests = []
   end
 
   def duration
@@ -20,6 +23,7 @@ class Appointment
 
   def close
     @open = false
+    @booked = true if (with || resolve_requests)
   end
 
   def closed?
@@ -27,7 +31,19 @@ class Appointment
   end
 
   def booked?
+    @booked
+  end
 
+  def add_request_by(user)
+    request = Request.new(user)
+    requests << request
+    request
+  end
+
+  def resolve_requests
+    if requests.any?
+      self.with = requests.first.user
+    end
   end
 
 end
