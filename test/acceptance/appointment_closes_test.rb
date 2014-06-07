@@ -1,13 +1,15 @@
 require './test/test_helper'
 require './lib/models/user_repository'
+require './lib/models/priority_table'
 
 class AppointmentClosesTest < Minitest::Test
-  attr_reader :repo, :user, :requester, :appointment
+  attr_reader :repo, :user, :requester, :requester2, :appointment
 
   def setup
     @repo = UserRepository.new
     @user = repo.create_user(:username => "aturing")
     @requester = repo.create_user(:username => "aturing")
+    @requester2 = repo.create_user(:username => "jcheek")
     @appointment = user.create_appointment(
       name: "Friday Lunch"
     )
@@ -28,4 +30,23 @@ class AppointmentClosesTest < Minitest::Test
     assert_equal requester, appointment.with
   end
 
+  def test_appointment_closes_manually_with_fifo_request_booking
+    appointment.add_request_by(requester)
+    appointment.add_request_by(requester2)
+    appointment.close
+    assert appointment.booked?
+    assert_equal requester, appointment.with
+  end
+
+  def test_appointment_closes_manually_with_priority_table
+    priority_table = PriorityTable.new
+    priority_table.add(requester,  2)
+    priority_table.add(requester2, 1)
+    appointment.prioritizer = priority_table
+    appointment.add_request_by(requester)
+    appointment.add_request_by(requester2)
+    appointment.close
+    assert appointment.booked?
+    assert_equal requester2, appointment.with
+  end
 end

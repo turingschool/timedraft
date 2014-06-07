@@ -1,8 +1,9 @@
 require './lib/models/request'
+require './lib/models/fifo_table'
 
 class Appointment
   attr_reader :name, :day, :starts, :ends, :open, :requests
-  attr_accessor :with
+  attr_accessor :with, :prioritizer
 
   def initialize(params)
     @name = params[:name]
@@ -11,6 +12,7 @@ class Appointment
     @ends = params[:ends]
     @open = true
     @requests = []
+    @prioritizer = params[:prioritizer] || FIFOTable.new
   end
 
   def duration
@@ -42,7 +44,8 @@ class Appointment
 
   def resolve_requests
     if requests.any?
-      self.with = requests.first.user
+      users = requests.map(&:user)
+      self.with = prioritizer.sort(users).first
     end
   end
 
