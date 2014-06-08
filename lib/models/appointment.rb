@@ -1,5 +1,5 @@
 require './lib/models/request'
-require './lib/models/fifo_table'
+require './lib/prioritizers/fifo'
 
 class Appointment
   attr_reader :name, :day, :starts, :ends, :open, :requests
@@ -12,7 +12,7 @@ class Appointment
     @ends = params[:ends]
     @open = true
     @requests = []
-    @prioritizer = params[:prioritizer] || FIFOTable.new
+    @prioritizer = params[:prioritizer] || Prioritizers::FIFO.new
   end
 
   def duration

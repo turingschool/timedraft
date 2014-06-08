@@ -1,6 +1,6 @@
 require './test/test_helper'
 require './lib/models/user_repository'
-require './lib/models/priority_table'
+require './lib/prioritizers/arbitrary'
 
 class AppointmentClosesTest < Minitest::Test
   attr_reader :repo, :user, :requester, :requester2, :appointment
@@ -39,7 +39,7 @@ class AppointmentClosesTest < Minitest::Test
   end
 
   def test_appointment_closes_manually_with_priority_table
-    priority_table = PriorityTable.new
+    priority_table = Prioritizers::Arbitrary.new
     priority_table.add(requester,  2)
     priority_table.add(requester2, 1)
     appointment.prioritizer = priority_table
