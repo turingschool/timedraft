@@ -45,7 +45,7 @@ class Appointment
   def resolve_requests
     if requests.any?
       users = requests.map(&:user)
-      self.with = prioritizer.sort(users).first
+      self.with = prioritizer.pull(1, users)
     end
   end
 

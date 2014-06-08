@@ -23,10 +23,14 @@ module Prioritizers
       entries.index(user) || (raise UnsortableElementError)
     end
 
-    def sort(list, options = {})
-      result = list.sort_by{|user| priority_of(user)}
-      result.each{|element| drop(element)} if options[:confirm]
-      return result
+    def sort(list)
+      list.sort_by{|user| priority_of(user)}
+    end
+
+    def pull(quantity, list)
+      results = sort(list)[0...quantity]
+      results.each{|r| drop(r)}
+      return results
     end
   end
 end

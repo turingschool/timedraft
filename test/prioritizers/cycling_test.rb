@@ -39,7 +39,7 @@ class CyclingPriorizierTest < Minitest::Test
     user1 = users[1]
     user2 = users[2]
     assert_equal [user0, user1, user2], table.sort([user1, user2, user0])
-    assert_equal [user0, user1], table.sort([user1, user0], :confirm => true)
-    assert_equal [user2, user0, user1], table.sort([user0, user1, user2])
+    assert_equal [user0], table.pull(1, [user1, user0, user2])
+    assert_equal [user1], table.pull(1, [user1, user0, user2])
   end
 end

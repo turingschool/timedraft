@@ -17,5 +17,9 @@ module Prioritizers
     def sort(collection)
       collection.sort_by{|element| priority_of(element)}
     end
+
+    def pull(quantity, collection)
+      sort(collection)[0...quantity]
+    end
   end
 end
